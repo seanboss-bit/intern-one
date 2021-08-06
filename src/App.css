@@ -1,38 +1,159 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap");
+.login {
+  font-family: "Noto Sans JP";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.classic {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.form-body {
+  background: #fff;
+  box-shadow: 0 0rem 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  width: 650px;
+  padding: 30px 40px;
 }
-
-.App-link {
-  color: #61dafb;
+.form-body .form {
+  display: flex;
+  flex-direction: column;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.form-inputs {
+  width: 100%;
+}
+.form-inputs label {
+  margin-bottom: 10px;
+}
+.form-inputs input {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #333;
+  margin-bottom: 15px;
+  padding: 0.8rem;
+}
+.form-inputs input:focus {
+  outline: none;
+}
+.form input[type="submit"] {
+  padding: 0.6rem 0.8rem;
+  width: 100%;
+  border: none;
+  background: #6eb800;
+  color: #fff;
+  border-radius: 5px;
+}
+.form p {
+  font-weight: 300;
+  font-size: 16px;
+}
+.login-img {
+  margin-bottom: 20px;
+}
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+}
+.navbar {
+  position: fixed;
+  background: #6eb800;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+.links {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 90px 30px;
+  color: #fff;
+  width: 100%;
+  height: 100vh;
+  font-size: 20px;
+}
+.links div {
+  margin: 20px 10px;
+  cursor: pointer;
+  transition: 0.5s ease;
+}
+.links div:hover {
+  transform: translateY(-10px);
+}
+.links div i {
+  margin-right: 10px;
+}
+.nav-bar {
+  padding: 10px 30px;
+  display: none;
+}
+.body {
+  margin-left: 250px;
+  width: 100%;
+  height: 100vh;
+}
+.pie-chart-container {
+  display: flex;
+  justify-content: space-around;
+}
+.pie-chart,
+.line-chart {
+  width: 100%;
+}
+.pie-chart-container p,
+.line-chart p {
+  text-transform: capitalize;
+  text-align: center;
+  margin-top: 20px;
+}
+.pie-chart-container select {
+  text-transform: uppercase;
+  box-shadow: none;
+}
+.pie-chart-container select:focus {
+  outline: none;
+}
+.header {
+  color: #6eb800;
+}
+@media screen and (max-width: 700px) {
+  .form-body {
+    padding: 30px 10px;
   }
-  to {
-    transform: rotate(360deg);
+  .links span {
+    display: none;
+  }
+  .navbar {
+    width: 20%;
+  }
+  .links {
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .links div {
+    margin: 30px 10px;
+  }
+  .pie-chart-container {
+    flex-direction: column;
+  }
+  .body {
+    margin-left: 100px;
+    width: 70%;
+    padding: 10px 0;
+  }
+  .pie-chart {
+    width: 0%;
+  }
+  .header {
+    text-align: center;
   }
 }
