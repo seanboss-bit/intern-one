@@ -34,6 +34,7 @@ const Summary = () => {
   }, []);
   const comboBox = (e) => {
     const selectedId = e.target.value;
+    // eslint-disable-next-line 
     const selectedData = Data1.filter((d) => d.id == selectedId)[0];
     setPieData(selectedData);
   };
