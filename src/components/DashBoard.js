@@ -56,18 +56,18 @@ const DashBoard = () => {
           </div>
         ) : null}
         {count === 2 ? (
-          <div>
-            <h1>Welcome from count 2</h1>
+          <div className="dark">
+            <h1>Enrollees Dashboard coming soon...</h1>
           </div>
         ) : null}
         {count === 3 ? (
-          <div>
-            <h1>Welcome from count 3</h1>
+          <div className="dark">
+            <h1>facilities dashboard coming soon...</h1>
           </div>
         ) : null}
         {count === 4 ? (
-          <div>
-            <h1>Welcome from count 4</h1>
+          <div className="dark">
+            <h1>encounter dashboard coming soon...</h1>
           </div>
         ) : null}
       </section>
