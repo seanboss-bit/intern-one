@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "./axios";
-import { Pie, Line} from "react-chartjs-2";
-import { Data1 } from "./testData";
+import { Pie, Line, defaults } from "react-chartjs-2";
 
 const Summary = () => {
-  const [enroll, setEnroll] = useState("");
+  // for Enroll State
+  const [enroll, setEnroll] = useState(0);
+  // Facility Data
+  const [facilityData, setFacilityData] = useState({});
+  // for Facility total
+  const [facility, setFacility] = useState(0);
+  defaults.plugins.legend.align = "center";
+  // Testing State
   const [chartData, setChartData] = useState({});
-  const [pieData, setPieData] = useState({});
 
   const chart = async () => {
-    let label = [];
     let num = [];
     try {
-      const response = await axios.get("/lga/enrollment");
-      const responseNum = await axios.get("/all/lgas");
-      const payLoad = response.data.data;
-      const payNum = responseNum.data.data;
-      label.push(parseInt(payLoad));
+      const responseNum = await axios.get("/enrollments/plan");
+      const payNum = responseNum.data.data.enrollee_plan;
       num.push(Object.values(payNum));
-      console.log(num);
       setChartData({
-        labels: payLoad,
+        labels: ["bhcpf", "equity", "formal", "informal"],
         datasets: [
           {
             label: "LOREM",
@@ -29,26 +29,13 @@ const Summary = () => {
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
               "rgba(255, 206, 86, 0.3)",
-              "rgb(54, 162, 235)",
-              "rgba(54, 2, 235, 0.4)",
-              "rgba(54, 162, 235, 0.5)",
-              "rgba(54, 162, 235, 0.6)",
-              "rgba(54, 162, 5, 0.7)",
-              "rgba(5, 162, 235, 0.7)",
-              "rgba(54, 12, 235, 0.7)",
-              "rgba(54, 162, 45, 0.7)",
-              "rgba(56, 162, 235, 0.7)",
-              "rgba(255, 142, 235, 0.7)",
-              "rgb(24, 152, 235)",
-              "rgb(58, 162, 235)",
-              "rgb(54, 14, 235)",
-              "rgba(54, 11, 235, 0.2)",
-              "rgb(54, 14, 235)",
+              "rgba(24, 162, 23, 0.3)",
             ],
             borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
+              "rgb(255, 99, 132)",
+              "rgb(54, 162, 235)",
+              "rgb(255, 206, 86)",
+              "rgb(24, 162, 23)",
             ],
             borderWidth: 1,
           },
@@ -56,22 +43,173 @@ const Summary = () => {
       });
     } catch (error) {}
   };
-  useEffect(() => {
+  useEffect((e) => {
+    facilitate();
     chart();
-    setPieData(Data1[0]);
     enrollment();
+    let num = [];
+    const category = async () => {
+      const res = await axios.get("/facility/category");
+      num.push(Object.values(res.data.data.facility_category));
+      setFacilityData({
+        labels: ["health_clinicds", "pharmacy", "phc", "private"],
+        datasets: [
+          {
+            label: "",
+            data: num[0],
+            backgroundColor: ["red", "blue", "pink", "green"],
+            borderColor: ["white"],
+            borderWidth: 2,
+          },
+        ],
+      });
+    };
+    category();
   }, []);
   // For Chart Category
   const comboBox = async (e) => {
-    const selectedId = e.target.value;
-    // eslint-disable-next-line
-    const selectedData = Data1.filter((d) => d.id == selectedId)[0];
-    setPieData(selectedData);
+    let num = [];
+    let num2 = [];
+    const resz = await axios.get("/facility/zone");
+    const res = await axios.get("/facility/category");
+    if (e.target.value === "category") {
+      num.push(Object.values(res.data.data.facility_category));
+      setFacilityData({
+        labels: ["health_clinicds", "pharmacy", "phc", "private"],
+        datasets: [
+          {
+            label: "",
+            data: num[0],
+            backgroundColor: ["red", "blue", "pink", "green"],
+            borderColor: ["white"],
+            borderWidth: 3,
+          },
+        ],
+      });
+    } else if (e.target.value === "zone") {
+      num2.push(Object.values(resz.data.data.facility_zone));
+      setFacilityData({
+        labels: ["central", "north", "south"],
+        datasets: [
+          {
+            label: "",
+            data: num2[0],
+            backgroundColor: ["red", "blue", "pink", "green"],
+            borderColor: ["white"],
+            borderWidth: 3,
+          },
+        ],
+      });
+    }
+  };
+  const lookintoit = async (e) => {
+    if (e.target.value === "visits") {
+      const res = await axios.get("/enrollments/visit");
+      let num = [];
+      num.push(Object.values(res.data.data.enrollee_visit));
+      setChartData({
+        labels: ["encounters", "no encounter"],
+        datasets: [
+          {
+            label: "LOREM",
+            data: num[0],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(54, 162, 235)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(52, 15, 24)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      });
+    } else if (e.target.value === "plan") {
+      chart();
+    } else if (e.target.value === "zone") {
+      const res = await axios.get("/enrollments/zone");
+      let num = [];
+      num.push(Object.values(res.data.data.enrollee_zone));
+      setChartData({
+        labels: ["central", "north", "south"],
+        datasets: [
+          {
+            label: "LOREM",
+            data: num[0],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(54, 162, 235)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(52, 15, 24)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      });
+    } else if (e.target.value === "gender") {
+      const res = await axios.get("/enrollments/gender");
+      let num = [];
+      num.push(Object.values(res.data.data.enrollee_gender));
+      setChartData({
+        labels: ["female", "male"],
+        datasets: [
+          {
+            label: "LOREM",
+            data: num[0],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(54, 162, 235)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(52, 15, 24)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      });
+    } else if (e.target.value === "category") {
+      const res = await axios.get("/enrollments/category")
+      console.log(res);
+      let num = []
+      num.push(Object.values(res.data.data.enrollee_category));
+      setChartData({
+        labels: ["disability", "over 65", "pregnant", "under 5"],
+        datasets: [
+          {
+            label: "LOREM",
+            data: num[0],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgb(54, 162, 235)",
+              "rgb(54, 162, 23)",
+            ],
+            borderColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgb(52, 15, 24)"],
+            borderWidth: 1,
+          },
+        ],
+      });
+    }
   };
   // Enrollment Number Function
   const enrollment = async () => {
-    const response = await axios.get("/all/enrollments");
-    setEnroll(response.data.data);
+    const response = await axios.get("/enrollments/total");
+    setEnroll(response.data.data.enrollee_total);
+  };
+  //  Facilities Number Function
+  const facilitate = async () => {
+    const res = await axios.get(`/facility/total`);
+    setFacility(res.data.data.facility_total);
   };
   return (
     <div>
@@ -85,11 +223,11 @@ const Summary = () => {
             <h4>enrolles</h4>
           </div>
           <div className="box-1">
-            <span>404</span>
+            <span>{facility}</span>
             <h4>facilities</h4>
           </div>
           <div className="box-1">
-            <span>34500</span>
+            <span>0</span>
             <h4>encounters</h4>
           </div>
         </div>
@@ -97,17 +235,15 @@ const Summary = () => {
           <div className="facilities">
             <p>
               facilities summary by{" "}
-              <select onChange={(e) => comboBox(e)} value={pieData?.id}>
-                {Data1.map((data) => (
-                  <option value={data.id} key={data.id}>
-                    {data.name}
-                  </option>
-                ))}
+              <select onChange={(e) => comboBox(e)}>
+                <option value="category">category</option>
+                <option value="zone">zone</option>
               </select>
             </p>
-            {pieData ? (
+
+            {facilityData ? (
               <Pie
-                data={pieData?.dat}
+                data={facilityData}
                 options={{
                   responsive: true,
                   title: { text: "Test Charts", display: true },
@@ -119,12 +255,12 @@ const Summary = () => {
           <div className="enrolles">
             <p>
               enrolles summary by{" "}
-              <select name="">
-                <option>plan</option>
-                <option>zone</option>
-                <option>Gender</option>
-                <option>Category</option>
-                <option>Visits</option>
+              <select onChange={(e) => lookintoit(e)}>
+                <option value="plan">plan</option>
+                <option value="zone">zone</option>
+                <option value="gender">Gender</option>
+                <option value="category">Category</option>
+                <option value="visits">Visits</option>
               </select>
             </p>
             <Pie
